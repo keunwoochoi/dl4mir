@@ -10,10 +10,20 @@ from keras import backend as K
 from kapre.time_frequency import Melspectrogram
 from global_config import *
 
-def model_multi_kernel_shape(n_out, input_shape=INPUT_SHAPE):
+
+def model_multi_kernel_shape(n_out, input_shape=INPUT_SHAPE,
+                             out_activation='softmax'):
+    """
+
+    Parameters
+    ----------
+        n_out: integer, number of output nodes
+        input_shape: tuple, an input shape, which doesn't include batch-axis.
+        out_activation: activation function on the output
+    """
     audio_input = Input(shape=input_shape)
 
-    x = Melspectrogram(sr=SR, n_mels=32, power_melgram=2.0, return_decibel_melgram=True)(audio_input)
+    x = Melspectrogram(sr=SR, n_mels=64, power_melgram=2.0, return_decibel_melgram=True)(audio_input)
     x = BatchNormalization(axis=channel_axis)(x)
 
     x1 = Conv2D(7, (20, 3), padding='same')(x)
@@ -43,25 +53,30 @@ def model_multi_kernel_shape(n_out, input_shape=INPUT_SHAPE):
 
     x = GlobalAveragePooling2D()(x)
 
-    out = Dense(n_out)(x)
+    out = Dense(n_out, activation=out_activation)(x)
 
     model = Model(audio_input, out)
-
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     return model
 
 
-def model_crnn_icassp2017_choi(n_out, input_shape=INPUT_SHAPE):
+def model_crnn_icassp2017_choi(n_out, input_shape=INPUT_SHAPE,
+                               out_activation='softmax'):
     """A simplified model of 
     Convolutional Recurrent Neural Networks for Music Classification,
     K Choi, G Fazekas, M Sandler, K Choi, ICASSP, 2017, New Orleans, USA
+
+    Parameters
+    ----------
+        n_out: integer, number of output nodes
+        input_shape: tuple, an input shape, which doesn't include batch-axis.
+        out_activation: activation function on the output
 
     """
 
     audio_input = Input(shape=input_shape)
 
-    x = Melspectrogram(sr=SR, n_mels=32, power_melgram=2.0, return_decibel_melgram=True)(audio_input)
+    x = Melspectrogram(sr=SR, n_mels=64, power_melgram=2.0, return_decibel_melgram=True)(audio_input)
     x = BatchNormalization(axis=channel_axis)(x)
 
     x = Conv2D(21, (3, 3), padding='same')(x)
@@ -94,15 +109,15 @@ def model_crnn_icassp2017_choi(n_out, input_shape=INPUT_SHAPE):
     x = GRU(41, return_sequences=False, name='gru2')(x)
     x = Dropout(0.3)(x)
 
-    out = Dense(n_out)(x)
+    out = Dense(n_out, activation=out_activation)(x)
 
     model = Model(audio_input, out)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     return model
 
 
-def model_conv3x3_ismir2016_choi(n_out, input_shape=INPUT_SHAPE):
+def model_conv3x3_ismir2016_choi(n_out, input_shape=INPUT_SHAPE,
+                                 out_activation='softmax'):
     """ A simplified model of 
     Automatic Tagging Using Deep Convolutional Neural Networks,
     K Choi, G Fazekas, M Sandler, ISMIR, 2016, New York, USA
@@ -116,46 +131,45 @@ def model_conv3x3_ismir2016_choi(n_out, input_shape=INPUT_SHAPE):
     """
 
     model = Sequential()
-    model.add(Melspectrogram(sr=SR, n_mels=32, power_melgram=2.0, return_decibel_melgram=True,
+    model.add(Melspectrogram(sr=SR, n_mels=64, power_melgram=2.0, return_decibel_melgram=True,
                              input_shape=input_shape))
     model.add(BatchNormalization(axis=channel_axis))
+
+    model.add(Conv2D(10, (3, 3), padding='same'))
+    model.add(BatchNormalization(axis=channel_axis))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D((2, 2), padding='same'))
+
+    model.add(Conv2D(15, (3, 3), padding='same'))
+    model.add(BatchNormalization(axis=channel_axis))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D((2, 2), padding='same'))
+
+    model.add(Conv2D(15, (3, 3), padding='same'))
+    model.add(BatchNormalization(axis=channel_axis))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D((2, 2), padding='same'))
 
     model.add(Conv2D(20, (3, 3), padding='same'))
     model.add(BatchNormalization(axis=channel_axis))
     model.add(Activation('relu'))
     model.add(MaxPooling2D((2, 2), padding='same'))
 
-    model.add(Conv2D(25, (3, 3), padding='same'))
-    model.add(BatchNormalization(axis=channel_axis))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D((2, 2), padding='same'))
-
-    model.add(Conv2D(30, (3, 3), padding='same'))
-    model.add(BatchNormalization(axis=channel_axis))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D((2, 2), padding='same'))
-
-    model.add(Conv2D(35, (3, 3), padding='same'))
-    model.add(BatchNormalization(axis=channel_axis))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D((2, 2), padding='same'))
-
-    model.add(Conv2D(40, (3, 3), padding='same'))
+    model.add(Conv2D(20, (3, 3), padding='same'))
     model.add(BatchNormalization(axis=channel_axis))
     model.add(Activation('relu'))
     model.add(MaxPooling2D((2, 2), padding='same'))
 
     model.add(GlobalAveragePooling2D())
 
-    model.add(Dense(n_out))
-
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    model.add(Dense(n_out, activation=out_activation))
 
     return model
 
 
-def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE):
-    """ A simplified model of
+def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE,
+                                   out_activation='softmax'):
+    """A simplified model of
     End-to-end learning for music audio,
     Sander Dieleman and Benjamin Schrauwen, ICASSP, 2014
     
@@ -165,10 +179,16 @@ def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE):
         * n_layers (2 -> 3)
         * add GlobalAveragePooling2D
 
+    Parameters
+    ----------
+        n_out: integer, number of output nodes
+        input_shape: tuple, an input shape, which doesn't include batch-axis.
+        out_activation: activation function on the output
+
     """
 
     model = Sequential()
-    model.add(Melspectrogram(sr=SR, n_mels=32, power_melgram=2.0, return_decibel_melgram=True,
+    model.add(Melspectrogram(sr=SR, n_mels=64, power_melgram=2.0, return_decibel_melgram=True,
                              input_shape=input_shape))
 
     model.add(Conv2D(30, (32, 4), padding='valid'))  # (None, 16, 1, N)
@@ -188,14 +208,11 @@ def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE):
 
     model.add(GlobalAveragePooling2D())
 
-    model.add(Dense(n_out))
-
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    model.add(Dense(n_out, activation=out_activation))
 
     return model
 
 
 if __name__ == "__main__":
-
     model = model_multi_kernel_shape(8)
     model.summary()

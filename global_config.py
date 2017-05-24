@@ -1,3 +1,4 @@
+import json
 from keras import backend as K
 
 if K.image_data_format() == 'channels_first':
@@ -12,4 +13,13 @@ else:
     time_axis = 2
 
 SR = 16000  # TODO: 8000? (only for speed)
-INPUT_SHAPE = (1, SR * 10)
+LEN_SRC = 10.
+NSP_SRC = int(SR * LEN_SRC)
+INPUT_SHAPE = (1, NSP_SRC)
+
+with open('config.json') as json_data:
+    config = json.load(json_data)
+
+DIR_FMA_MP3 = config['dir_fma_mp3']
+DIR_FMA_CSV = config['dir_fma_csv']
+DIR_FMA_NPY = config['dir_fma_npy']
