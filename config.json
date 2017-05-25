@@ -1,6 +1,8 @@
 {
   "dir_fma_mp3" : "dataset_download/fma/fma_small",
   "dir_fma_csv": "dataset_download/fma/fma_metadata",
-  "dir_fma_npy" : "dataset_ready/fma"
+  "dir_fma_npy" : "dataset_ready/fma",
+  "dir_jamendo_download" : "dataset_download/jamendo",
+  "dir_jamendo_npy" : "dataset_ready/jamendo"
 }
 

@@ -7,10 +7,13 @@ import os
 import sys
 import pandas as pd
 import librosa
+import kapre
 import numpy as np
 import multiprocessing
 
 from global_config import *
+import utils_preprocess
+import pdb
 
 
 def load_decode_save_fma(track_id):
@@ -31,20 +34,13 @@ def load_decode_save_fma(track_id):
     print('Done: {}'.format(track_id))
 
 
+
 def prep_fma_small():
     """
     Decode fma dataset and store them in numpy arrays.
     Small FMA, 16-bit Float, SR=16000, and 10s, => 2.5GB
     """
-    # recursively create folder to save
-    dirs = DIR_FMA_NPY.split('/')
-    npy_path_sub = ''
-    for dr in dirs:
-        npy_path_sub = os.path.join(npy_path_sub, dr)
-        try:
-            os.mkdir(npy_path_sub)
-        except:
-            pass
+    utils_preprocess.make_dir_recursively(DIR_FMA_NPY)
 
     # pre-process
     tracks = pd.read_csv(os.path.join(DIR_FMA_CSV, 'tracks.csv'), index_col=0, header=[0, 1])
@@ -56,9 +52,37 @@ def prep_fma_small():
     p.map(load_decode_save_fma, indices)
 
 
+def prep_jamendo():
+    """decode jamendo and ..
+    """
+    utils_preprocess.make_dir_recursively(DIR_JAMENDO_NPY)
+    utils_preprocess.make_dir_recursively(DIR_JAMENDO_DOWNLOAD)
+    # pre-process
+    duration = None  # TEST
+    srcs_sets, ys_sets = kapre.datasets.load_jamendo(save_path=DIR_JAMENDO_DOWNLOAD,
+                                                     duration=duration)
+    sets = ['train', 'valid', 'test']
+    # decoding audio and label, and save them.
+    for set_name, srcs, ys in zip(sets, srcs_sets, ys_sets):
+        # for i, (src, y) in enumerate(zip(srcs, ys)):
+        fn_x = '{}_x.npy'.format(set_name)
+        fn_y = '{}_y.npy'.format(set_name)
+        try:
+            np.save(os.path.join(DIR_JAMENDO_NPY, fn_x), np.array(srcs))
+        except:
+            pdb.set_trace()
+        try:
+            np.save(os.path.join(DIR_JAMENDO_NPY, fn_y), np.array(ys))
+        except:
+            pdb.set_trace()
+
+
 def main(dataset_name):
+    assert dataset_name in ['fma', 'jamendo']
     if dataset_name == 'fma':
         prep_fma_small()
+    elif dataset_name == 'jamendo':
+        prep_jamendo()
 
 
 def print_usage():
@@ -66,12 +90,12 @@ def print_usage():
     print('$ python main_preprocess.py $dataset_name$')
     print('Example:')
     print('$ python main_preprocess.py fma')
+    print('$ python main_preprocess.py jamendo')
     print('')
     print('Ps. Make sure you downloaded the dataset and set the dirs/paths in config.json')
 
 
 if __name__ == '__main__':
-    try:
-        main(sys.argv[1])
-    except:
+    if len(sys.argv) < 2:
         print_usage()
+    main(sys.argv[1])

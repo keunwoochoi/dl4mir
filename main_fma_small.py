@@ -9,6 +9,7 @@ import os
 import pandas as pd
 import numpy as np
 import models_excerpt
+import models_MLP
 
 from sklearn.preprocessing import LabelEncoder
 
@@ -16,6 +17,8 @@ import utils_preprocess
 import my_callbacks
 from global_config import *
 
+
+# TODO: add MLP models.
 
 def data_gen(df_subset, ys, is_shuffle, batch_size=40):
     """Data generator.
@@ -78,6 +81,7 @@ def main(model_name, exp_name='fma'):
     print("It's a good practice to use callbacks in Keras.")
     callbacks = my_callbacks.get_callbacks(name=exp_name)
     early_stopper, model_saver, weight_saver, csv_logger = callbacks
+
     print("Preparing data generators for training and validation...")
     batch_size = 40
     steps_per_epoch = len(y_train) // batch_size
@@ -119,3 +123,102 @@ if __name__ == '__main__':
     main('crnn', 'fma_crnn')
     main('cnn3x3', 'fma_cnn3x3')
     main('cnn1d', 'fma_cnn1d')
+"""
+Keunwoo: Welcome! Lets do something deep with FMA dataset.
+         I'm assuming you finished pre-processing.
+         We're gonna use multi_kernel model
+Keunwoo: We're loading and modifying label values.
+It's a good practice to use callbacks in Keras.
+Preparing data generators for training and validation...
+Keunwoo: Getting model...
+Keunwoo: Starting to train...
+
+Epoch 1/5
+160/160 [==============================] - 53s - loss: 1.7421 - acc: 0.3731 - val_loss: 2.0509 - val_acc: 0.2350
+Epoch 2/5
+160/160 [==============================] - 48s - loss: 1.5444 - acc: 0.4503 - val_loss: 1.8888 - val_acc: 0.2775
+Epoch 3/5
+160/160 [==============================] - 48s - loss: 1.4819 - acc: 0.4730 - val_loss: 1.6285 - val_acc: 0.4063
+Epoch 4/5
+160/160 [==============================] - 48s - loss: 1.4061 - acc: 0.5120 - val_loss: 1.6534 - val_acc: 0.3988
+Epoch 5/5
+160/160 [==============================] - 48s - loss: 1.3584 - acc: 0.5248 - val_loss: 1.5023 - val_acc: 0.4938
+Keunwoo: Training is done. Loading the best weights...
+         Evaluating...
+Keunwoo: Done for multi_kernel!
+         test set loss:1.5535479486
+         test set accuracy: [0.47750000953674315]%
+------------------------------------------------------------
+Keunwoo: Welcome! Lets do something deep with FMA dataset.
+         I'm assuming you finished pre-processing.
+         We're gonna use crnn model
+Keunwoo: We're loading and modifying label values.
+It's a good practice to use callbacks in Keras.
+Preparing data generators for training and validation...
+Keunwoo: Getting model...
+Keunwoo: Starting to train...
+Epoch 1/5
+160/160 [==============================] - 63s - loss: 1.8359 - acc: 0.2875 - val_loss: 2.2506 - val_acc: 0.1900
+Epoch 2/5
+160/160 [==============================] - 61s - loss: 1.6170 - acc: 0.4120 - val_loss: 2.3764 - val_acc: 0.2500
+Epoch 3/5
+160/160 [==============================] - 60s - loss: 1.5181 - acc: 0.4548 - val_loss: 1.8484 - val_acc: 0.3513
+Epoch 4/5
+160/160 [==============================] - 60s - loss: 1.4217 - acc: 0.4989 - val_loss: 1.5957 - val_acc: 0.4375
+Epoch 5/5
+160/160 [==============================] - 60s - loss: 1.3699 - acc: 0.5247 - val_loss: 1.5935 - val_acc: 0.4250
+Keunwoo: Training is done. Loading the best weights...
+         Evaluating...
+Keunwoo: Done for crnn!
+         test set loss:1.67180262804
+         test set accuracy: [0.39250000640749932]%
+------------------------------------------------------------
+Keunwoo: Welcome! Lets do something deep with FMA dataset.
+         I'm assuming you finished pre-processing.
+         We're gonna use cnn3x3 model
+Keunwoo: We're loading and modifying label values.
+It's a good practice to use callbacks in Keras.
+Preparing data generators for training and validation...
+Keunwoo: Getting model...
+Keunwoo: Starting to train...
+Epoch 1/5
+160/160 [==============================] - 30s - loss: 1.7715 - acc: 0.3659 - val_loss: 2.0864 - val_acc: 0.2013
+Epoch 2/5
+160/160 [==============================] - 29s - loss: 1.5308 - acc: 0.4581 - val_loss: 1.7897 - val_acc: 0.3275
+Epoch 3/5
+160/160 [==============================] - 29s - loss: 1.4375 - acc: 0.5031 - val_loss: 1.6883 - val_acc: 0.3975
+Epoch 4/5
+160/160 [==============================] - 29s - loss: 1.3595 - acc: 0.5261 - val_loss: 2.0865 - val_acc: 0.3238
+Epoch 5/5
+160/160 [==============================] - 29s - loss: 1.3319 - acc: 0.5344 - val_loss: 2.0630 - val_acc: 0.3263
+Keunwoo: Training is done. Loading the best weights...
+         Evaluating...
+Keunwoo: Done for cnn3x3!
+         test set loss:1.86332789063
+         test set accuracy: [0.3225000061094761]%
+------------------------------------------------------------
+Keunwoo: Welcome! Lets do something deep with FMA dataset.
+         I'm assuming you finished pre-processing.
+         We're gonna use cnn1d model
+Keunwoo: We're loading and modifying label values.
+It's a good practice to use callbacks in Keras.
+Preparing data generators for training and validation...
+Keunwoo: Getting model...
+Keunwoo: Starting to train...
+Epoch 1/5
+160/160 [==============================] - 31s - loss: 1.7900 - acc: 0.3372 - val_loss: 2.5954 - val_acc: 0.1300
+Epoch 2/5
+160/160 [==============================] - 29s - loss: 1.6272 - acc: 0.4186 - val_loss: 1.9440 - val_acc: 0.2625
+Epoch 3/5
+160/160 [==============================] - 28s - loss: 1.5502 - acc: 0.4498 - val_loss: 3.3067 - val_acc: 0.1913
+Epoch 4/5
+160/160 [==============================] - 28s - loss: 1.5200 - acc: 0.4548 - val_loss: 2.0652 - val_acc: 0.2288
+Epoch 5/5
+160/160 [==============================] - 28s - loss: 1.4641 - acc: 0.4764 - val_loss: 3.2042 - val_acc: 0.2100
+Keunwoo: Training is done. Loading the best weights...
+         Evaluating...
+Keunwoo: Done for cnn1d!
+         test set loss:1.92252177596
+         test set accuracy: [0.23250000523403286]%
+
+"""

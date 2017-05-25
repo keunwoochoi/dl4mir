@@ -23,3 +23,6 @@ with open('config.json') as json_data:
 DIR_FMA_MP3 = config['dir_fma_mp3']
 DIR_FMA_CSV = config['dir_fma_csv']
 DIR_FMA_NPY = config['dir_fma_npy']
+
+DIR_JAMENDO_DOWNLOAD = config['dir_jamendo_download']
+DIR_JAMENDO_NPY = config['dir_jamendo_npy']
