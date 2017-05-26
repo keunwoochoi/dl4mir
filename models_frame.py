@@ -49,9 +49,9 @@ def model_convrnn(n_out, input_shape=(1, None), out_activation='softmax'):
     model.add(Activation('relu'))
 
     if K.image_dim_ordering() == 'channels_first':  # (ch, freq, time)
-        model.add(Permute((3, 1, 2)))  # (time, ch, freq)
+        model.add(Permute((3, 2, 1)))  # (time, freq, ch)
     else:  # (freq, time, ch)
-        model.add(Permute((2, 3, 1)))  # (time, ch, freq)
+        model.add(Permute((2, 1, 3)))  # (time, ch, freq)
 
     # model.add(Reshape((-1, n_mels * n_ch))) # (time, ch * freq)
     # Reshape for LSTM

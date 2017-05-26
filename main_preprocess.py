@@ -64,17 +64,11 @@ def prep_jamendo():
     sets = ['train', 'valid', 'test']
     # decoding audio and label, and save them.
     for set_name, srcs, ys in zip(sets, srcs_sets, ys_sets):
-        # for i, (src, y) in enumerate(zip(srcs, ys)):
-        fn_x = '{}_x.npy'.format(set_name)
-        fn_y = '{}_y.npy'.format(set_name)
-        try:
-            np.save(os.path.join(DIR_JAMENDO_NPY, fn_x), np.array(srcs))
-        except:
-            pdb.set_trace()
-        try:
-            np.save(os.path.join(DIR_JAMENDO_NPY, fn_y), np.array(ys))
-        except:
-            pdb.set_trace()
+        for i, (src, y) in enumerate(zip(srcs, ys)):
+            fn_x = '{}_{:02}_x.npy'.format(set_name, i)
+            fn_y = '{}_{:02}_y.npy'.format(set_name, i)
+            np.save(os.path.join(DIR_JAMENDO_NPY, fn_x), np.array(src, dtype=np.float16))
+            np.save(os.path.join(DIR_JAMENDO_NPY, fn_y), np.array(y, dtype=np.float16))
 
 
 def main(dataset_name):
