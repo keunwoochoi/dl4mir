@@ -1,7 +1,7 @@
 """ 16 May 2017, Keunwoo Choi (keunwoo.choi@qmul.ac.uk)
 
 It assumes FMA-small dataset is downloaded and pre-processed by main_preprocess.py.
-
+3
 """
 from __future__ import print_function  # (at top of module)
 
@@ -123,6 +123,7 @@ if __name__ == '__main__':
     main('crnn', 'fma_crnn')
     main('cnn3x3', 'fma_cnn3x3')
     main('cnn1d', 'fma_cnn1d')
+
 """
 Keunwoo: Welcome! Lets do something deep with FMA dataset.
          I'm assuming you finished pre-processing.
