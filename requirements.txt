@@ -1,4 +1,7 @@
 keras==2.0.4
 kapre==0.1.1
+librosa==0.5
 numpy
 future
+matplotlib
+
