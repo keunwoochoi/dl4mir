@@ -8,8 +8,8 @@ by Keunwoo Choi (first.last@qmul.ac.uk)
   3. [Example 3: Setup `config.json`](https://github.com/keunwoochoi/mir_deepnet_tutorial/blob/master/Example_3.py)
   4. [Example 4: download and preprocess](https://github.com/keunwoochoi/mir_deepnet_tutorial/blob/master/Example_4.py)
   5. Real examples with real datasets!
-    1. [Example 5-1: Time-varying classification example using Jamendo dataset](https://github.com/keunwoochoi/mir_deepnet_tutorial/blob/master/Example_5-1.py)
-    2. [Example 5-2: Time-invariant classification example using FMA dataset](https://github.com/keunwoochoi/mir_deepnet_tutorial/blob/master/Example_5-2.py)
+    * [Example 5-1: Time-varying classification example using Jamendo dataset](https://github.com/keunwoochoi/mir_deepnet_tutorial/blob/master/Example_5-1.py)
+    * [Example 5-2: Time-invariant classification example using FMA dataset](https://github.com/keunwoochoi/mir_deepnet_tutorial/blob/master/Example_5-2.py)
 
 ## Prerequisites
    ```
