@@ -1,4 +1,10 @@
-from __future__ import print_function  # (at top of module)
+"""
+This module contains several time-varying models.
+
+I'm assuming a raw-audio input, which is converted to melspectrogram using Kapre.
+
+"""
+from __future__ import print_function
 
 from keras.models import Sequential, Model
 from keras.layers import Activation, Dense, Input, Reshape, Permute, Lambda
@@ -17,6 +23,9 @@ from global_config import *
 
 def model_convrnn(n_out, input_shape=(1, None), out_activation='softmax'):
     """No reference, just ConvRNN.
+
+    Symbolic summary:
+    > c2 - c2 - c2 - c2 - r2 - r2 - d1
 
     Parameters
     ----------
@@ -70,6 +79,10 @@ def model_lstm_leglaive_icassp2014(n_out, input_shape=(1, None),
                                    out_activation='softmax', bidirectional=True):
     """Singing voice detection with deep recurrent neural networks
     Simon Leglaive, Romain Hennequin, Roland Badeau, ICASSP 2015
+
+    Symbolic summary:
+    > bi_r1 - bi_r1 - bi_r1 -
+    > r1 - r1 - r1 - d1
 
     Parameters
     ----------

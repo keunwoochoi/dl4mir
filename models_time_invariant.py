@@ -1,3 +1,10 @@
+"""
+This module contains several time-invariant models.
+
+I'm assuming a raw-audio input, which is converted to melspectrogram using Kapre.
+
+"""
+from __future__ import print_function
 from keras.models import Sequential, Model
 from keras.layers import Activation, Dense, Flatten, Input, Reshape, Dropout, Permute
 from keras.layers.convolutional import Conv2D
@@ -14,6 +21,10 @@ from global_config import *
 def model_multi_kernel_shape(n_out, input_shape=INPUT_SHAPE,
                              out_activation='softmax'):
     """
+
+    Symbolic summary:
+    > c2' - p2 - c2 - p2 - c2 - p2 - c2 - p3 - d1
+    where c2' -> multiple kernel shapes
 
     Parameters
     ----------
@@ -65,6 +76,9 @@ def model_crnn_icassp2017_choi(n_out, input_shape=INPUT_SHAPE,
     """A simplified model of 
     Convolutional Recurrent Neural Networks for Music Classification,
     K Choi, G Fazekas, M Sandler, K Choi, ICASSP, 2017, New Orleans, USA
+
+    Symbolic summary:
+    > c2 - p2 - c2 - p2 - c2 - p2 - c2 - p2 - r1 - r2 - d1
 
     Parameters
     ----------
@@ -122,6 +136,9 @@ def model_conv3x3_ismir2016_choi(n_out, input_shape=INPUT_SHAPE,
     Automatic Tagging Using Deep Convolutional Neural Networks,
     K Choi, G Fazekas, M Sandler, ISMIR, 2016, New York, USA
 
+    Symbolic summary:
+    > c2 - p2 - c2 - p2 - c2 - p2 - c2 - p2 - c2 - p3 - d1
+
     Modifications: 
         * n_mels (96 -> 32)
         * n_channels (many -> [16, 24, 32, 40, 48])
@@ -172,7 +189,10 @@ def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE,
     """A simplified model of
     End-to-end learning for music audio,
     Sander Dieleman and Benjamin Schrauwen, ICASSP, 2014
-    
+
+    Symbolic summary:
+    > c1 - p1 - c1 - p1 - c1 - p1 - p3 - d1
+
     Modifications: 
         * Add BatchNormalization
         * n_mels (128 -> 32)

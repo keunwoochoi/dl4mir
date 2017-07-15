@@ -1,0 +1,8 @@
+print("Now you're gonna download datasets.")
+print("To download FMA for genre classification,")
+print("$ python main_preprocess.py fma")
+print("")
+print("To download Jamendo for frame-based vocal/nonvocal classification, ")
+print("$ python main_preprocess.py jamendo")
+print("")
+print("and wait till it ends!")

@@ -12,11 +12,13 @@ else:
     freq_axis = 1
     time_axis = 2
 
-SR = 16000  # TODO: 8000? (only for speed)
+# Constants
+SR = 16000
 LEN_SRC = 10.
 NSP_SRC = int(SR * LEN_SRC)
 INPUT_SHAPE = (1, NSP_SRC)
 
+# Paths
 with open('config.json') as json_data:
     config = json.load(json_data)
 

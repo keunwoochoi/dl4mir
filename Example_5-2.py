@@ -1,14 +1,21 @@
-""" 16 May 2017, Keunwoo Choi (keunwoo.choi@qmul.ac.uk)
+"""
+Example_5-2.py
 
-It assumes FMA-small dataset is downloaded and pre-processed by main_preprocess.py.
-3
+-------------------------------------------------------
+Time-invariant classification example using FMA dataset
+-------------------------------------------------------
+
+It assumes FMA dataset is downloaded and pre-processed by main_preprocess.py.
+See Example4.py for more info.
+
 """
 from __future__ import print_function  # (at top of module)
+from builtins import range
 
 import os
 import pandas as pd
 import numpy as np
-import models_excerpt
+import models_time_invariant
 import models_MLP
 
 from sklearn.preprocessing import LabelEncoder
@@ -17,8 +24,6 @@ import utils_preprocess
 import my_callbacks
 from global_config import *
 
-
-# TODO: add MLP models.
 
 def data_gen(df_subset, ys, is_shuffle, batch_size=40):
     """Data generator.
@@ -36,7 +41,7 @@ def data_gen(df_subset, ys, is_shuffle, batch_size=40):
         print("  so the residual {} sample(s) will be ignored.".format(n_data % batch_size))
 
     while True:
-        for batch_i in xrange(n_batch):
+        for batch_i in range(n_batch):
             if is_shuffle:
                 batch_idxs = np.random.choice(n_data, batch_size, replace=False)
             else:
@@ -90,13 +95,13 @@ def main(model_name, exp_name='fma'):
 
     print("Keunwoo: Getting model...")
     if model_name == 'multi_kernel':
-        model = models_excerpt.model_multi_kernel_shape(n_out=8)
+        model = models_time_invariant.model_multi_kernel_shape(n_out=8)
     elif model_name == 'crnn':
-        model = models_excerpt.model_crnn_icassp2017_choi(n_out=8)
+        model = models_time_invariant.model_crnn_icassp2017_choi(n_out=8)
     elif model_name == 'cnn3x3':
-        model = models_excerpt.model_conv3x3_ismir2016_choi(n_out=8)
+        model = models_time_invariant.model_conv3x3_ismir2016_choi(n_out=8)
     elif model_name == 'cnn1d':
-        model = models_excerpt.model_conv1d_icassp2014_sander(n_out=8)
+        model = models_time_invariant.model_conv1d_icassp2014_sander(n_out=8)
 
     model.compile('adam', 'categorical_crossentropy', metrics=['accuracy'])
 

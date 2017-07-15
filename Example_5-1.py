@@ -1,14 +1,21 @@
-""" 16 May 2017, Keunwoo Choi (keunwoo.choi@qmul.ac.uk)
+"""
+Example_5-1.py
 
-It assumes FMA-small dataset is downloaded and pre-processed by main_preprocess.py.
+---------------------------------------------------------
+Time-varying classification example using Jamendo dataset
+---------------------------------------------------------
+
+It assumes Jamendo dataset is downloaded and pre-processed by main_preprocess.py.
+See Example4.py for more info.
 
 """
 from __future__ import print_function  # (at top of module)
+from builtins import range
 
 import os
 import pandas as pd
 import numpy as np
-import models_frame
+import models_time_varying
 import models_MLP
 
 from sklearn.preprocessing import LabelEncoder
@@ -18,8 +25,6 @@ import my_callbacks
 from global_config import *
 
 import pdb
-
-# TODO: add MLP models.
 
 N_DATA = {'train': 61,
           'valid': 16,
@@ -44,7 +49,7 @@ def y_sample_to_frame(y):
     n_hop = N_HOP
     nsp_y = len(y)
     ret = np.array([np.round(np.mean(y[max(0, (i - 1) * n_hop): min(nsp_y, (i + 1) * n_hop)])) \
-                    for i in xrange(nsp_y // n_hop)], dtype=np.int)
+                    for i in range(nsp_y // n_hop)], dtype=np.int)
     return ret
 
 
@@ -73,7 +78,7 @@ def data_gen(set_name, nsp_input, is_shuffle, is_infinite, batch_size):
     # ys = [y_sample_to_frame(y) for y in ys]
 
     while True:
-        for batch_i in xrange(n_batch):
+        for batch_i in range(n_batch):
             if is_shuffle:
                 data_idxs = np.random.choice(n_data, batch_size, replace=False)
             else:
@@ -109,7 +114,7 @@ def data_gen(set_name, nsp_input, is_shuffle, is_infinite, batch_size):
 
 def main(model_name, exp_name='fma'):
     """
-    DO it!
+    DO the work!
     """
     assert model_name in ['crnn', 'lstm', 'lstm_bi']
     print("-" * 60)
@@ -130,11 +135,11 @@ def main(model_name, exp_name='fma'):
 
     print("Keunwoo: Getting model...")
     if model_name == 'crnn':
-        model = models_frame.model_convrnn(n_out=2)
+        model = models_time_varying.model_convrnn(n_out=2)
     elif model_name == 'lstm':
-        model = models_frame.model_lstm_leglaive_icassp2014(n_out=2, bidirectional=False)
+        model = models_time_varying.model_lstm_leglaive_icassp2014(n_out=2, bidirectional=False)
     elif model_name == 'lstm_bi'
-        model = models_frame.model_lstm_leglaive_icassp2014(n_out=2, bidirectional=True)
+        model = models_time_varying.model_lstm_leglaive_icassp2014(n_out=2, bidirectional=True)
 
     model.compile('adam', 'categorical_crossentropy', metrics=['accuracy'])
 
