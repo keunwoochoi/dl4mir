@@ -14,8 +14,12 @@ by Keunwoo Choi (first.last@qmul.ac.uk)
 ## Prerequisites
    ```
    $ pip install -r requirements.txt
+   $ git clone https://github.com/keunwoochoi/kapre.git
+   $ cd kapre
+   $ python setup.py install
    ```
    to install
-  * Kapre, Librosa, Keras, Numpy, Matplotlib, Future
+  * Librosa, Keras, Numpy, Matplotlib, Future
+  * kapre
 
 
