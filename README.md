@@ -27,10 +27,10 @@ This is a repo for my tutorial paper; [A Tutorial on Deep Learning for Music Inf
 ## Some links
   * [DL_MIR_TUTORIAL](https://github.com/tuwien-musicir/DL_MIR_Tutorial): Another DL for MIR tutorial by Thomas Lidy 
   * [DL in music informatics](http://steinhardt.nyu.edu/marl/research/deep_learning_in_music_informatics): ISMIR 2014 tutorial
-  * [cs213n](http://cs231n.stanford.edu): Perhaps the most popular convnet tutorial from Stanford university.
-  * [librosa tutorial](https://librosa.github.io/librosa/tutorial.html): If you're interested in learning a bit more of MIR
+  * [cs213n](http://cs231n.stanford.edu): Perhaps the most popular convnet tutorial. From Stanford university.
+  * [librosa tutorial](https://librosa.github.io/librosa/tutorial.html): If you're interested in learning a bit more of MIR and its implementations.
   * [MIR datasets](https://www.audiocontentanalysis.org/data-sets/): An awesome list of MIR datasets
-  * [/r/musicir](https://www.reddit.com/r/musicir/): A subreddit for MIR 
+  * [/r/musicir](https://www.reddit.com/r/musicir/): A subreddit for MIR
 
 ## Cite?
 ```
