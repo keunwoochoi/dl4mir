@@ -25,12 +25,20 @@ This is a repo for my tutorial paper; [A Tutorial on Deep Learning for Music Inf
   * kapre
 
 ## Some links
-  * [DL_MIR_TUTORIAL](https://github.com/tuwien-musicir/DL_MIR_Tutorial): Another DL for MIR tutorial by Thomas Lidy 
-  * [DL in music informatics](http://steinhardt.nyu.edu/marl/research/deep_learning_in_music_informatics): ISMIR 2014 tutorial
-  * [cs213n](http://cs231n.stanford.edu): Perhaps the most popular convnet tutorial. From Stanford university.
-  * [librosa tutorial](https://librosa.github.io/librosa/tutorial.html): If you're interested in learning a bit more of MIR and its implementations.
-  * [MIR datasets](https://www.audiocontentanalysis.org/data-sets/): An awesome list of MIR datasets
-  * [/r/musicir](https://www.reddit.com/r/musicir/): A subreddit for MIR
+  * Repo
+    * [DL_MIR_TUTORIAL](https://github.com/tuwien-musicir/DL_MIR_Tutorial): Another DL for MIR tutorial repo by Thomas Lidy 
+    * [Awesome deep learning music](https://github.com/ybayle/awesome-deep-learning-music): A long list of deep learning x music papers + etc.
+  * Slides
+    * [Deep Neural Networks in MIR](https://www.audiolabs-erlangen.de/resources/MIR/2017-GI-Tutorial-Musik/2017_MuellerWeissBalke_GI_DeepLearningMIR.pdf): A tutorial focusing on feature learning, beat/rhythm analysis, structure analysis. Also a nice literature overview including publications by year, conference, task, network types, input representations, frame work, etc. By Meinard Muller et al. 
+    * [DL in music informatics](http://steinhardt.nyu.edu/marl/research/deep_learning_in_music_informatics): ISMIR 2014 tutorial. 
+  * Documents, books
+    * [Deep learning book](http://www.deeplearningbook.org): The first deep learning textbook. by Ian Goodfellow and Yoshua Bengio and Aaron Courville.
+  * Online
+    * [cs213n](http://cs231n.stanford.edu): Perhaps the best lecture on convnets. From Stanford university.
+    * [librosa tutorial](https://librosa.github.io/librosa/tutorial.html): If you're interested in learning a bit more of MIR and its implementations.
+    * [MIRDL: state-of-the-art](http://jordipons.me/wiki/index.php/MIRDL): A wikipedia on MIR and DL by Jordi Pons.
+    * [MIR datasets](https://www.audiocontentanalysis.org/data-sets/): An awesome list of MIR datasets
+    * [/r/musicir](https://www.reddit.com/r/musicir/): A subreddit for MIR
 
 ## Cite?
 ```
