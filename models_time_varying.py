@@ -37,7 +37,7 @@ def model_convrnn(n_out, input_shape=(1, None), out_activation='softmax'):
     """
     assert input_shape[0] == 1, 'Mono input please!'
     model = Sequential()
-    n_mels = 64
+    n_mels = 40
     model.add(Melspectrogram(sr=SR, n_mels=n_mels, power_melgram=2.0,
                              return_decibel_melgram=True,
                              input_shape=input_shape))
@@ -57,7 +57,7 @@ def model_convrnn(n_out, input_shape=(1, None), out_activation='softmax'):
     model.add(BatchNormalization(axis=channel_axis))
     model.add(Activation('relu'))
 
-    if K.image_dim_ordering() == 'channels_first':  # (ch, freq, time)
+    if K.image_data_format() == 'channels_first':  # (ch, freq, time)
         model.add(Permute((3, 2, 1)))  # (time, freq, ch)
     else:  # (freq, time, ch)
         model.add(Permute((2, 1, 3)))  # (time, ch, freq)
@@ -98,12 +98,12 @@ def model_lstm_leglaive_icassp2014(n_out, input_shape=(1, None),
                              return_decibel_melgram=True,
                              input_shape=input_shape))
 
+    model.add(BatchNormalization(axis=channel_axis))
+    
     if K.image_data_format() == 'channels_first':
         model.add(Permute((3, 2, 1)))  # ch, freq, time -> time, freq, ch
     else:
         model.add(Permute((2, 1, 3)))  # freq, time, ch -> time, freq, ch
-
-    model.add(BatchNormalization(axis=channel_axis))
 
     # Reshape for LSTM
     model.add(Lambda(lambda x: K.squeeze(x, axis=3),
