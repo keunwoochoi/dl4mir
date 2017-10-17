@@ -68,20 +68,22 @@ def main(model_name, exp_name='fma'):
     csv_path = os.path.join(DIR_FMA_CSV, 'tracks.csv')
 
     tracks = pd.read_csv(csv_path, index_col=0, header=[0, 1])
-    small = tracks['set', 'subset'] == 'small'
-    training = (tracks['set', 'split'] == 'training') & small
-    validation = (tracks['set', 'split'] == 'validation') & small
-    test = (tracks['set', 'split'] == 'test') & small
+    subset = tracks['set', 'subset'] == 'small'
+    training = (tracks['set', 'split'] == 'training') & subset
+    validation = (tracks['set', 'split'] == 'validation') & subset
+    test = (tracks['set', 'split'] == 'test') & subset
 
     print("Keunwoo: We're loading and modifying label values.")
     enc = LabelEncoder()
     y_train = enc.fit_transform(tracks[training]['track', 'genre_top'])
     y_valid = enc.transform(tracks[validation]['track', 'genre_top'])
     y_test = enc.transform(tracks[test]['track', 'genre_top'])
-
-    y_train = np.eye(8)[y_train]
-    y_valid = np.eye(8)[y_valid]
-    y_test = np.eye(8)[y_test]
+    
+    n_out = len(np.unique(y_train))
+    
+    y_train = np.eye(n_out)[y_train]
+    y_valid = np.eye(n_out)[y_valid]
+    y_test = np.eye(n_out)[y_test]
 
     print("It's a good practice to use callbacks in Keras.")
     callbacks = my_callbacks.get_callbacks(name=exp_name)
@@ -95,13 +97,13 @@ def main(model_name, exp_name='fma'):
 
     print("Keunwoo: Getting model...")
     if model_name == 'multi_kernel':
-        model = models_time_invariant.model_multi_kernel_shape(n_out=8)
+        model = models_time_invariant.model_multi_kernel_shape(n_out=n_out)
     elif model_name == 'crnn':
-        model = models_time_invariant.model_crnn_icassp2017_choi(n_out=8)
+        model = models_time_invariant.model_crnn_icassp2017_choi(n_out=n_out)
     elif model_name == 'cnn3x3':
-        model = models_time_invariant.model_conv3x3_ismir2016_choi(n_out=8)
+        model = models_time_invariant.model_conv3x3_ismir2016_choi(n_out=n_out)
     elif model_name == 'cnn1d':
-        model = models_time_invariant.model_conv1d_icassp2014_sander(n_out=8)
+        model = models_time_invariant.model_conv1d_icassp2014_sander(n_out=n_out)
 
     model.compile('adam', 'categorical_crossentropy', metrics=['accuracy'])
 
