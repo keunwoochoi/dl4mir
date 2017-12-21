@@ -6,12 +6,13 @@ I'm assuming a raw-audio input, which is converted to melspectrogram using Kapre
 """
 from __future__ import print_function
 from keras.models import Sequential, Model
-from keras.layers import Activation, Dense, Flatten, Input, Reshape, Dropout, Permute
+from keras.layers import Activation, Dense, Flatten, Input, Reshape, Dropout, Permute, Lambda, MaxPooling1D, Convolution1D
 from keras.layers.convolutional import Conv2D
 from keras.layers.normalization import BatchNormalization
-from keras.layers.recurrent import GRU
+from keras.layers.recurrent import GRU, LSTM
 from keras.layers.pooling import MaxPooling2D, GlobalAveragePooling2D
 from keras.layers.merge import Concatenate
+from keras.layers.wrappers import TimeDistributed
 from keras import backend as K
 
 from kapre.time_frequency import Melspectrogram
@@ -229,6 +230,59 @@ def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE,
     model.add(GlobalAveragePooling2D())
 
     model.add(Dense(n_out, activation=out_activation))
+
+    return model
+  
+def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
+    """A time_invariant model that can be used also for predicting
+    on smaller audio windows (with the output_realtime layer)
+
+    Parameters
+    ----------
+        n_out: integer, number of output nodes
+        input_shape: tuple, an input shape, which doesn't include batch-axis.
+        out_activation: activation function on the output
+
+    """
+    
+    N_LAYERS = 3
+    FILTER_LENGTH = 5
+    CONV_FILTER_COUNT = 256
+    LSTM_COUNT = 256
+
+    model_input = Input(input_shape, name='input')
+    layer = Melspectrogram(sr=SR, n_mels=128, power_melgram=2.0,
+                           return_decibel_melgram=True)(model_input)
+
+    layer = BatchNormalization(axis=channel_axis)(layer)
+
+    if K.image_data_format() == 'channels_first':  # (ch, freq, time)
+        layer = Permute((1, 3, 2))(layer)
+
+    layer = Lambda(lambda x: K.squeeze(x, axis=1),
+                   output_shape=lambda shape: (shape[0],) + shape[2:])(layer)
+
+    for i in range(N_LAYERS):
+        layer = Convolution1D(
+            filters=CONV_FILTER_COUNT,
+            kernel_size=FILTER_LENGTH,
+            name='convolution_' + str(i + 1)
+        )(layer)
+        layer = Activation('relu')(layer)
+        layer = MaxPooling1D(2)(layer)
+
+    layer = Dropout(0.5)(layer)
+    layer = LSTM(LSTM_COUNT, return_sequences=True)(layer)
+    layer = Dropout(0.5)(layer)
+    layer = TimeDistributed(Dense(n_out))(layer)
+    layer = Activation('softmax', name='output_realtime')(layer)
+    time_distributed_merge_layer = Lambda(
+        function=lambda x: K.mean(x, axis=1),
+        output_shape=lambda shape: (shape[0],) + shape[2:],
+        name='output_merged'
+    )
+    model_output = time_distributed_merge_layer(layer)
+    model = Model(model_input, model_output)
 
     return model
 
