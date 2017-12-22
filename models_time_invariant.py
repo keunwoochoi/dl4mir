@@ -234,9 +234,63 @@ def model_conv1d_icassp2014_sander(n_out, input_shape=INPUT_SHAPE,
     return model
   
 def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
-    """A time_invariant model that can be used also for predicting
-    on smaller audio windows (with the output_realtime layer)
-
+    """ Convolutional-Recurrent Neural Networks for Live Music Genre Recognition
+    Piotr Kozakowski, Jakub Królak, Łukasz Margas and Bartosz Michalak. 
+    Braincode 2016 hackathon in Warsaw.
+    A time_invariant model that can be used also for predicting
+    on smaller audio windows (with the output_realtime layer). Built for GTZAN Genres.
+    Adapted for FMA genre classification.
+    
+    Modifications: 
+      * Added Melspectrogram
+      * CONV_FILTER_COUNT (256 -> 32)
+      * LSTM_COUNT (256 -> 64)
+    
+    Symbolic summary:
+    > c1 - p1 - c1 - p1 - c1 - p1 - p3 - d1
+    
+    Summary:
+      input (InputLayer)           (None, 1, 160000)         0         
+      _________________________________________________________________
+      melspectrogram_2 (Melspectro (None, 1, 128, 625)       296064    
+      _________________________________________________________________
+      batch_normalization_2 (Batch (None, 1, 128, 625)       4         
+      _________________________________________________________________
+      permute_2 (Permute)          (None, 1, 625, 128)       0         
+      _________________________________________________________________
+      lambda_2 (Lambda)            (None, 625, 128)          0         
+      _________________________________________________________________
+      convolution_1 (Conv1D)       (None, 621, 32)           20512     
+      _________________________________________________________________
+      activation_4 (Activation)    (None, 621, 32)           0         
+      _________________________________________________________________
+      max_pooling1d_4 (MaxPooling1 (None, 310, 32)           0         
+      _________________________________________________________________
+      convolution_2 (Conv1D)       (None, 306, 32)           5152      
+      _________________________________________________________________
+      activation_5 (Activation)    (None, 306, 32)           0         
+      _________________________________________________________________
+      max_pooling1d_5 (MaxPooling1 (None, 153, 32)           0         
+      _________________________________________________________________
+      convolution_3 (Conv1D)       (None, 149, 32)           5152      
+      _________________________________________________________________
+      activation_6 (Activation)    (None, 149, 32)           0         
+      _________________________________________________________________
+      max_pooling1d_6 (MaxPooling1 (None, 74, 32)            0         
+      _________________________________________________________________
+      lstm_2 (LSTM)                (None, 74, 64)            24832     
+      _________________________________________________________________
+      time_distributed_2 (TimeDist (None, 74, 8)             520       
+      _________________________________________________________________
+      output_realtime (Activation) (None, 74, 8)             0         
+      _________________________________________________________________
+      output_merged (Lambda)       (None, 8)                 0         
+      =================================================================
+      Total params: 352,236
+      Trainable params: 56,170
+      Non-trainable params: 296,066
+      _________________________________________________________________
+        
     Parameters
     ----------
         n_out: integer, number of output nodes
@@ -247,8 +301,8 @@ def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
     
     N_LAYERS = 3
     FILTER_LENGTH = 5
-    CONV_FILTER_COUNT = 256
-    LSTM_COUNT = 256
+    CONV_FILTER_COUNT = 32
+    LSTM_COUNT = 64
 
     model_input = Input(input_shape, name='input')
     layer = Melspectrogram(sr=SR, n_mels=128, power_melgram=2.0,
@@ -271,9 +325,9 @@ def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
         layer = Activation('relu')(layer)
         layer = MaxPooling1D(2)(layer)
 
-    layer = Dropout(0.5)(layer)
-    layer = LSTM(LSTM_COUNT, return_sequences=True)(layer)
-    layer = Dropout(0.5)(layer)
+    # layer = Dropout(0.5)(layer)
+    layer = LSTM(LSTM_COUNT, return_sequences=True, recurrent_dropout=0.25, dropout=0.25)(layer)
+    # layer = Dropout(0.5)(layer)
     layer = TimeDistributed(Dense(n_out))(layer)
     layer = Activation('softmax', name='output_realtime')(layer)
     time_distributed_merge_layer = Lambda(
