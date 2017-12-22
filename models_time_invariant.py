@@ -241,6 +241,24 @@ def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
     on smaller audio windows (with the output_realtime layer). Built for GTZAN Genres.
     Adapted for FMA genre classification.
     
+    Conv1D layers are more suitable for changes across time - they look at a small period of time as a whole, 
+    extract the most valuable information and create a feature map that is still a sequence over time. 
+    The features are translation-invariant only in time domain (Conv2D dont seem suitable for this)- 
+    we still need to distinguish between higher and lower frequencies. 
+    After each layer we use ReLU activation and 1-D max pooling, which are a pretty safe and reasonable choices.
+    
+    The resulting sequence of features is then fed to an LSTM layer, which should "find" both dependencies across short period of time, 
+    and a long term structure of a song.
+    LSTM are used since audio is a pretty long sequence in which every timestep strongly relies on both 
+    the immediate predecessors and long term structure of a whole song. 
+    
+    After the LSTM, all the input goes into a time-distributed fully connected layer with softmax activation, essentially giving
+    a sequence of N-dimensional vectors (N = number of genres) for each timestep. These vectors represent the network’s 
+    belief of the music genre at the particular point of time, modelled as probability distributions.
+    
+    In the end we take an arithmetic mean across time of all the predicted distributions and return it as a final answer. 
+    These mean of vectors is too a valid distribution.
+    
     Modifications: 
       * Added Melspectrogram
       * CONV_FILTER_COUNT (256 -> 32)
@@ -248,7 +266,7 @@ def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
       * Changed DROPOUT layers with LSTM internal dropout
     
     Symbolic summary:
-    > c1 - p1 - c1 - p1 - c1 - p1 - p3 - d1
+    > c1 - p1 - c1 - p1 - c1 - p1 - r1 - r2 - d1
     
     Summary:
       input (InputLayer)           (None, 1, 160000)         0         
