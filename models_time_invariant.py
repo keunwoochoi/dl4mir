@@ -245,6 +245,7 @@ def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
       * Added Melspectrogram
       * CONV_FILTER_COUNT (256 -> 32)
       * LSTM_COUNT (256 -> 64)
+      * Changed DROPOUT layers with LSTM internal dropout
     
     Symbolic summary:
     > c1 - p1 - c1 - p1 - c1 - p1 - p3 - d1
