@@ -344,9 +344,7 @@ def model_lstm_time_distributed(n_out, input_shape=INPUT_SHAPE):
         layer = Activation('relu')(layer)
         layer = MaxPooling1D(2)(layer)
 
-    # layer = Dropout(0.5)(layer)
     layer = LSTM(LSTM_COUNT, return_sequences=True, recurrent_dropout=0.25, dropout=0.25)(layer)
-    # layer = Dropout(0.5)(layer)
     layer = TimeDistributed(Dense(n_out))(layer)
     layer = Activation('softmax', name='output_realtime')(layer)
     time_distributed_merge_layer = Lambda(
