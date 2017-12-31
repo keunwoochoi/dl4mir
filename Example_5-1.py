@@ -137,7 +137,7 @@ def main(model_name, exp_name='fma'):
         model = models_time_varying.model_convrnn(n_out=2)
     elif model_name == 'lstm':
         model = models_time_varying.model_lstm_leglaive_icassp2014(n_out=2, bidirectional=False)
-    elif model_name == 'lstm_bi'
+    elif model_name == 'lstm_bi':
         model = models_time_varying.model_lstm_leglaive_icassp2014(n_out=2, bidirectional=True)
 
     model.compile('adam', 'categorical_crossentropy', metrics=['accuracy'])
