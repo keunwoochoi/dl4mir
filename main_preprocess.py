@@ -13,6 +13,7 @@ import multiprocessing
 
 from global_config import *
 import utils_preprocess
+import datasets
 import pdb
 
 
@@ -59,8 +60,8 @@ def prep_jamendo():
     utils_preprocess.make_dir_recursively(DIR_JAMENDO_DOWNLOAD)
     # pre-process
     duration = None  # TEST
-    srcs_sets, ys_sets = kapre.datasets.load_jamendo(save_path=DIR_JAMENDO_DOWNLOAD,
-                                                     duration=duration)
+    srcs_sets, ys_sets = datasets.load_jamendo(save_path=DIR_JAMENDO_DOWNLOAD,
+                                                duration=duration)
     sets = ['train', 'valid', 'test']
     # decoding audio and label, and save them.
     for set_name, srcs, ys in zip(sets, srcs_sets, ys_sets):
