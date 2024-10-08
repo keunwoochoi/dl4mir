@@ -1,4 +1,4 @@
-keras==2.0.4
+keras==2.13.1
 librosa==0.5
 numpy
 future
